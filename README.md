@@ -10,6 +10,11 @@
    - SDF 파일 작성
    - Gazebo GUI 실행하기
 
+2. [객체 모델링 및 월드에 추가하기](chapter2/chapter2.md)
+   - SDF로 3D 객체 모델링
+   - 객체를 월드에 포함하기
+   - 시뮬레이션 실행하기
+
 ## 프로젝트 구조
 
 ```
@@ -17,6 +22,11 @@
 ├── chapter1/           # 1장: 환경 설정
 │   ├── chapter1.md     # 튜토리얼 문서
 │   └── empty_world.sdf # 예제 SDF 파일
+├── chapter2/           # 2장: 객체 모델링
+│   ├── chapter2.md     # 튜토리얼 문서
+│   ├── box.sdf         # 박스 모델 파일
+│   ├── sphere.sdf      # 구체 모델 파일
+│   └── world_with_objects.sdf # 객체가 포함된 월드 파일
 └── README.md           # 프로젝트 설명
 ```
 
@@ -39,4 +49,8 @@ cd ros2_gazebo_ignition_tutorial
 # 예: 1장 튜토리얼의 SDF 파일 실행
 cd chapter1
 ign gazebo -r empty_world.sdf
+
+# 예: 2장 튜토리얼의 객체가 포함된 월드 실행
+cd ../chapter2
+ign gazebo -r world_with_objects.sdf
 ```
