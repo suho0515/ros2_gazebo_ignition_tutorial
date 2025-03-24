@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <model name="advanced_robot">
+    <!-- 로봇 본체 (직사각형) -->
+    <link name="base_frame">
+      <pose>0 0 0.1 0 0 0</pose>
+      <inertial>
+        <mass>10.0</mass>
+        <inertia>
+          <ixx>0.5</ixx>
+          <iyy>0.8</iyy>
+          <izz>1.0</izz>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>0.8 0.5 0.1</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>0.8 0.5 0.1</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.2 0.4 0.8 1</ambient>
+          <diffuse>0.2 0.4 0.8 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+    </link>
+
+    <!-- 전면 드라이빙 모듈 포함 -->
+    <include>
+      <uri>model://chapter9/models/advanced_robot/actuators/driving_module/front</uri>
+      <name>front_module</name>
+      <pose>0.35 0 0.1 0 0 0</pose>
+    </include>
+
+    <!-- 후면 드라이빙 모듈 포함 -->
+    <include>
+      <uri>model://chapter9/models/advanced_robot/actuators/driving_module/rear</uri>
+      <name>rear_module</name>
+      <pose>-0.35 0 0.1 0 0 3.14159</pose>
+    </include>
+
+    <!-- 전면 드라이빙 모듈 회전 조인트 -->
+    <joint name="front_module_joint" type="revolute">
+      <parent>base_frame</parent>
+      <child>front_module::module_base</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1.5708</lower>  <!-- -90도 (CCW 제한) -->
+          <upper>1.5708</upper>   <!-- 90도 (CW 제한) -->
+        </limit>
+      </axis>
+    </joint>
+
+    <!-- 후면 드라이빙 모듈 회전 조인트 -->
+    <joint name="rear_module_joint" type="revolute">
+      <parent>base_frame</parent>
+      <child>rear_module::module_base</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1.5708</lower>  <!-- -90도 (CCW 제한) -->
+          <upper>1.5708</upper>   <!-- 90도 (CW 제한) -->
+        </limit>
+      </axis>
+    </joint>
+  </model>
+</sdf> 

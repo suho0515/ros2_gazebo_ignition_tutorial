@@ -1,0 +1,282 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+  <world name="advanced_robot_world">
+    <!-- 물리 설정 -->
+    <physics name="1ms" type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+
+    <!-- 기본 플러그인 -->
+    <plugin
+      filename="libignition-gazebo-physics-system.so"
+      name="ignition::gazebo::systems::Physics">
+    </plugin>
+    <plugin
+      filename="libignition-gazebo-user-commands-system.so"
+      name="ignition::gazebo::systems::UserCommands">
+    </plugin>
+    <plugin
+      filename="libignition-gazebo-scene-broadcaster-system.so"
+      name="ignition::gazebo::systems::SceneBroadcaster">
+    </plugin>
+
+    <!-- 조명 -->
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <!-- 지면 모델 포함 -->
+    <include>
+      <uri>model://chapter9/models/ground_plane</uri>
+    </include>
+
+    <!-- 로봇 모델 포함 -->
+    <include>
+      <uri>model://chapter9/models/advanced_robot</uri>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
+
+    <!-- 조인트 컨트롤러 플러그인들 -->
+    <!-- 전면 드라이빙 모듈 회전 컨트롤러 -->
+    <plugin
+      filename="libignition-gazebo-joint-controller-system.so"
+      name="ignition::gazebo::systems::JointController">
+      <joint_name>advanced_robot::front_module_joint</joint_name>
+      <topic>/front_module/steering</topic>
+      <joint_type>position</joint_type>
+      <p_gain>1.0</p_gain>
+      <i_gain>0.0</i_gain>
+      <d_gain>0.5</d_gain>
+      <i_max>1</i_max>
+      <i_min>-1</i_min>
+      <cmd_max>1.5708</cmd_max>
+      <cmd_min>-1.5708</cmd_min>
+    </plugin>
+
+    <!-- 후면 드라이빙 모듈 회전 컨트롤러 -->
+    <plugin
+      filename="libignition-gazebo-joint-controller-system.so"
+      name="ignition::gazebo::systems::JointController">
+      <joint_name>advanced_robot::rear_module_joint</joint_name>
+      <topic>/rear_module/steering</topic>
+      <joint_type>position</joint_type>
+      <p_gain>1.0</p_gain>
+      <i_gain>0.0</i_gain>
+      <d_gain>0.5</d_gain>
+      <i_max>1</i_max>
+      <i_min>-1</i_min>
+      <cmd_max>1.5708</cmd_max>
+      <cmd_min>-1.5708</cmd_min>
+    </plugin>
+
+    <!-- 전면 모듈 바퀴 RPM 컨트롤러 -->
+    <!-- 좌측 바퀴 RPM 컨트롤러 -->
+    <plugin
+      filename="libignition-gazebo-joint-controller-system.so"
+      name="ignition::gazebo::systems::JointController">
+      <joint_name>advanced_robot::front_module::left_wheel_joint</joint_name>
+      <topic>/front_module/left_wheel/rpm</topic>
+      <joint_type>velocity</joint_type>
+      <p_gain>0.1</p_gain>
+      <i_gain>0.01</i_gain>
+      <d_gain>0.001</d_gain>
+      <i_max>1</i_max>
+      <i_min>-1</i_min>
+      <cmd_max>5</cmd_max>
+      <cmd_min>-5</cmd_min>
+      <transform_velocity_to_rpm>true</transform_velocity_to_rpm>
+    </plugin>
+
+    <!-- 우측 바퀴 RPM 컨트롤러 -->
+    <plugin
+      filename="libignition-gazebo-joint-controller-system.so"
+      name="ignition::gazebo::systems::JointController">
+      <joint_name>advanced_robot::front_module::right_wheel_joint</joint_name>
+      <topic>/front_module/right_wheel/rpm</topic>
+      <joint_type>velocity</joint_type>
+      <p_gain>0.1</p_gain>
+      <i_gain>0.01</i_gain>
+      <d_gain>0.001</d_gain>
+      <i_max>1</i_max>
+      <i_min>-1</i_min>
+      <cmd_max>5</cmd_max>
+      <cmd_min>-5</cmd_min>
+      <transform_velocity_to_rpm>true</transform_velocity_to_rpm>
+    </plugin>
+
+    <!-- 후면 모듈 바퀴 RPM 컨트롤러 -->
+    <!-- 좌측 바퀴 RPM 컨트롤러 -->
+    <plugin
+      filename="libignition-gazebo-joint-controller-system.so"
+      name="ignition::gazebo::systems::JointController">
+      <joint_name>advanced_robot::rear_module::left_wheel_joint</joint_name>
+      <topic>/rear_module/left_wheel/rpm</topic>
+      <joint_type>velocity</joint_type>
+      <p_gain>0.1</p_gain>
+      <i_gain>0.01</i_gain>
+      <d_gain>0.001</d_gain>
+      <i_max>1</i_max>
+      <i_min>-1</i_min>
+      <cmd_max>5</cmd_max>
+      <cmd_min>-5</cmd_min>
+      <transform_velocity_to_rpm>true</transform_velocity_to_rpm>
+    </plugin>
+
+    <!-- 우측 바퀴 RPM 컨트롤러 -->
+    <plugin
+      filename="libignition-gazebo-joint-controller-system.so"
+      name="ignition::gazebo::systems::JointController">
+      <joint_name>advanced_robot::rear_module::right_wheel_joint</joint_name>
+      <topic>/rear_module/right_wheel/rpm</topic>
+      <joint_type>velocity</joint_type>
+      <p_gain>0.1</p_gain>
+      <i_gain>0.01</i_gain>
+      <d_gain>0.001</d_gain>
+      <i_max>1</i_max>
+      <i_min>-1</i_min>
+      <cmd_max>5</cmd_max>
+      <cmd_min>-5</cmd_min>
+      <transform_velocity_to_rpm>true</transform_velocity_to_rpm>
+    </plugin>
+
+    <!-- GUI 설정 -->
+    <gui fullscreen="0">
+      <plugin filename="MinimalScene" name="3D View">
+        <gz-gui>
+          <title>3D View</title>
+          <property type="bool" key="showTitleBar">false</property>
+          <property type="string" key="state">docked</property>
+        </gz-gui>
+        <engine>ogre2</engine>
+        <scene>scene</scene>
+        <ambient_light>0.4 0.4 0.4</ambient_light>
+        <background_color>0.8 0.8 0.8</background_color>
+        <camera_pose>-6 0 6 0 0.5 0</camera_pose>
+        <camera_clip>
+          <near>0.25</near>
+          <far>25000</far>
+        </camera_clip>
+        <view_control>orbit</view_control>
+        <enable_mouse_navigation>true</enable_mouse_navigation>
+      </plugin>
+      <plugin filename="GzSceneManager" name="Scene Manager">
+        <gz-gui>
+          <property key="resizable" type="bool">false</property>
+          <property key="showTitleBar" type="bool">false</property>
+        </gz-gui>
+      </plugin>
+      <plugin filename="KeyPublisher" name="Key Publisher">
+        <gz-gui>
+          <anchors target="GzSceneManager">
+            <line own="right" target="right"/>
+            <line own="top" target="top"/>
+          </anchors>
+          <property key="showTitleBar" type="bool">false</property>
+        </gz-gui>
+      </plugin>
+      
+      <!-- 전면 드라이빙 모듈 제어 (회전 및 RPM) -->
+      <plugin filename="Publisher" name="Front Module Steering">
+        <gz-gui>
+          <property key="showTitleBar" type="bool">true</property>
+          <property key="resizable" type="bool">true</property>
+          <property key="width" type="double">400</property>
+          <property key="height" type="double">300</property>
+          <property key="state" type="string">docked</property>
+          <property key="title" type="string">전면 모듈 회전 각도</property>
+        </gz-gui>
+        <topic>/front_module/steering</topic>
+        <message_type>ignition.msgs.Double</message_type>
+        <default_value>0.0</default_value>
+        <min>-1.5708</min>
+        <max>1.5708</max>
+      </plugin>
+      
+      <plugin filename="Publisher" name="Front Left Wheel RPM">
+        <gz-gui>
+          <property key="showTitleBar" type="bool">true</property>
+          <property key="resizable" type="bool">true</property>
+          <property key="width" type="double">400</property>
+          <property key="height" type="double">300</property>
+          <property key="state" type="string">docked</property>
+          <property key="title" type="string">전면 좌측 바퀴 RPM</property>
+        </gz-gui>
+        <topic>/front_module/left_wheel/rpm</topic>
+        <message_type>ignition.msgs.Double</message_type>
+        <default_value>0.0</default_value>
+        <min>-60.0</min>
+        <max>60.0</max>
+      </plugin>
+      
+      <plugin filename="Publisher" name="Front Right Wheel RPM">
+        <gz-gui>
+          <property key="showTitleBar" type="bool">true</property>
+          <property key="resizable" type="bool">true</property>
+          <property key="width" type="double">400</property>
+          <property key="height" type="double">300</property>
+          <property key="state" type="string">docked</property>
+          <property key="title" type="string">전면 우측 바퀴 RPM</property>
+        </gz-gui>
+        <topic>/front_module/right_wheel/rpm</topic>
+        <message_type>ignition.msgs.Double</message_type>
+        <default_value>0.0</default_value>
+        <min>-60.0</min>
+        <max>60.0</max>
+      </plugin>
+      
+      <plugin filename="Publisher" name="Rear Module Steering">
+        <gz-gui>
+          <property key="showTitleBar" type="bool">true</property>
+          <property key="resizable" type="bool">true</property>
+          <property key="width" type="double">400</property>
+          <property key="height" type="double">300</property>
+          <property key="state" type="string">docked</property>
+          <property key="title" type="string">후면 모듈 회전 각도</property>
+        </gz-gui>
+        <topic>/rear_module/steering</topic>
+        <message_type>ignition.msgs.Double</message_type>
+        <default_value>0.0</default_value>
+        <min>-1.5708</min>
+        <max>1.5708</max>
+      </plugin>
+      
+      <plugin filename="Publisher" name="Rear Left Wheel RPM">
+        <gz-gui>
+          <property key="showTitleBar" type="bool">true</property>
+          <property key="resizable" type="bool">true</property>
+          <property key="width" type="double">400</property>
+          <property key="height" type="double">300</property>
+          <property key="state" type="string">docked</property>
+          <property key="title" type="string">후면 좌측 바퀴 RPM</property>
+        </gz-gui>
+        <topic>/rear_module/left_wheel/rpm</topic>
+        <message_type>ignition.msgs.Double</message_type>
+        <default_value>0.0</default_value>
+        <min>-60.0</min>
+        <max>60.0</max>
+      </plugin>
+      
+      <plugin filename="Publisher" name="Rear Right Wheel RPM">
+        <gz-gui>
+          <property key="showTitleBar" type="bool">true</property>
+          <property key="resizable" type="bool">true</property>
+          <property key="width" type="double">400</property>
+          <property key="height" type="double">300</property>
+          <property key="state" type="string">docked</property>
+          <property key="title" type="string">후면 우측 바퀴 RPM</property>
+        </gz-gui>
+        <topic>/rear_module/right_wheel/rpm</topic>
+        <message_type>ignition.msgs.Double</message_type>
+        <default_value>0.0</default_value>
+        <min>-60.0</min>
+        <max>60.0</max>
+      </plugin>
+    </gui>
+  </world>
+</sdf> 
