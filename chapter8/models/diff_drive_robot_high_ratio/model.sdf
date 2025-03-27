@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <model name="diff_drive_robot_high_ratio">
+    <!-- 로봇 본체 -->
+    <link name="chassis">
+      <pose>0 0 0.05 0 0 0</pose>
+      <inertial>
+        <mass>5.0</mass>
+        <inertia>
+          <ixx>0.0417</ixx>
+          <iyy>0.0417</iyy>
+          <izz>0.0833</izz>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>0.4 0.3 0.1</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>0.4 0.3 0.1</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.8 0.2 0.2 1</ambient>
+          <diffuse>0.8 0.2 0.2 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+    </link>
+
+    <!-- 좌측 바퀴 모델 포함 -->
+    <include>
+      <uri>model://chapter8/models/diff_drive_robot_high_ratio/actuators/left_wheel</uri>
+      <name>left_wheel</name>
+      <pose>0.1 0.175 0.05 -1.5707 0 0</pose>
+    </include>
+
+    <!-- 우측 바퀴 모델 포함 -->
+    <include>
+      <uri>model://chapter8/models/diff_drive_robot_high_ratio/actuators/right_wheel</uri>
+      <name>right_wheel</name>
+      <pose>0.1 -0.175 0.05 -1.5707 0 0</pose>
+    </include>
+
+    <!-- 캐스터 휠 -->
+    <link name="caster">
+      <pose>-0.15 0 0.025 0 0 0</pose>
+      <inertial>
+        <mass>0.5</mass>
+        <inertia>
+          <ixx>0.0001</ixx>
+          <iyy>0.0001</iyy>
+          <izz>0.0001</izz>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <sphere>
+            <radius>0.025</radius>
+          </sphere>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>0.1</mu>
+              <mu2>0.1</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <sphere>
+            <radius>0.025</radius>
+          </sphere>
+        </geometry>
+        <material>
+          <ambient>0.3 0.3 0.3 1</ambient>
+          <diffuse>0.3 0.3 0.3 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+    </link>
+
+    <!-- 좌측 바퀴 조인트 - 기어비 3:1 (높은 기어비) -->
+    <joint name="left_wheel_joint" type="revolute">
+      <parent>chassis</parent>
+      <child>left_wheel::left_wheel_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+          <damping>0</damping>
+          <friction>0</friction>
+        </dynamics>
+      </axis>
+      <physics>
+        <ode>
+          <gear_ratio>3</gear_ratio>
+        </ode>
+      </physics>
+    </joint>
+
+    <!-- 우측 바퀴 조인트 - 기어비 3:1 (높은 기어비) -->
+    <joint name="right_wheel_joint" type="revolute">
+      <parent>chassis</parent>
+      <child>right_wheel::right_wheel_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+          <damping>0</damping>
+          <friction>0</friction>
+        </dynamics>
+      </axis>
+      <physics>
+        <ode>
+          <gear_ratio>3</gear_ratio>
+        </ode>
+      </physics>
+    </joint>
+
+    <!-- 캐스터 볼 조인트 -->
+    <joint name="caster_joint" type="ball">
+      <parent>chassis</parent>
+      <child>caster</child>
+    </joint>
+
+    <!-- IMU 센서 모델 포함 -->
+    <include>
+      <uri>model://chapter8/models/diff_drive_robot_high_ratio/sensors/imu</uri>
+      <name>imu</name>
+      <pose>0 0 0.1 0 0 0</pose>
+    </include>
+
+    <!-- IMU 센서 고정 조인트 -->
+    <joint name="imu_joint" type="fixed">
+      <parent>chassis</parent>
+      <child>imu::imu_link</child>
+    </joint>
+
+    <!-- 좌측 바퀴 제어를 위한 JointController 플러그인 -->
+    <plugin
+      filename="libgz-sim-joint-controller-system.so"
+      name="ignition::gazebo::systems::JointController">
+      <joint_name>left_wheel_joint</joint_name>
+      <topic>/wheel_velocity</topic>
+      <joint_type>velocity</joint_type>
+      <p_gain>1</p_gain>
+      <i_gain>0.1</i_gain>
+      <d_gain>0.01</d_gain>
+    </plugin>
+
+    <!-- 우측 바퀴 제어를 위한 JointController 플러그인 -->
+    <plugin
+      filename="libgz-sim-joint-controller-system.so"
+      name="ignition::gazebo::systems::JointController">
+      <joint_name>right_wheel_joint</joint_name>
+      <topic>/wheel_velocity</topic>
+      <joint_type>velocity</joint_type>
+      <p_gain>1</p_gain>
+      <i_gain>0.1</i_gain>
+      <d_gain>0.01</d_gain>
+    </plugin>
+  </model>
+</sdf> 
